@@ -1,14 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Direct WhatsApp Sender</title>
-    
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="shortcut icon" type="image/png" href="icon.png">
-    
-    <link rel="apple-touch-icon" href="icon.png">
-    
     <style>
-        /* Yahan aapka purana CSS code hoga... */
+        /* General Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Tool Container Card */
+        .wa-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .wa-card h2 {
+            color: #075e54;
+            margin-bottom: 20px;
+        }
+
+        /* Input Fields */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            font-size: 16px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #25d366;
+        }
+
+        /* Country Code & Number Layout */
+        .phone-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #country-code {
+            width: 80px;
+        }
+
+        /* Button Styling */
+        .btn-send {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-send:hover {
+            background-color: #1da851;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
     </style>
 </head>
+<body>
+
+    <div class="wa-card">
+        <h2>🚀 Direct WhatsApp</h2>
+        <p>Chat without saving number</p>
+
+        <div class="input-group">
+            <label>Phone Number</label>
+            <div class="phone-input">
+                <input type="text" id="country-code" value="+91" placeholder="+91">
+                <input type="number" id="phone-number" placeholder="Enter mobile number">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Message (Optional)</label>
+            <textarea id="message" rows="3" placeholder="Hi, I want to inquire about..."></textarea>
+        </div>
+
+        <button class="btn-send" onclick="sendWhatsApp()">Chat on WhatsApp</button>
+        
+        <p class="note">🔒 Your number is safe. We do not store any data.</p>
+    </div>
+
+    <script>
+        function sendWhatsApp() {
+            // 1. Get Values
+            var code = document.getElementById('country-code').value.trim();
+            var number = document.getElementById('phone-number').value.trim();
+            var text = document.getElementById('message').value.trim();
+
+            // 2. Validation (Check if number is empty)
+            if (number === "") {
+                alert("Please enter a valid mobile number!");
+                return;
+            }
+
+            // 3. Clean up the number (Remove +, spaces, or dashes if user typed them)
+            // Hamein clean format chahiye: 919876543210
+            code = code.replace('+', ''); 
+            number = number.replace(/ /g, '').replace(/-/g, '');
+
+            // 4. Create the Final URL
+            // Format: https://wa.me/CountryCodePhoneNumber?text=Message
+            var finalUrl = "https://wa.me/" + code + number;
+
+            // Agar message bhi likha hai, to URL mein add karo
+            if (text !== "") {
+                // encodeURIComponent zaroori hai taaki spaces aur special chars URL mein kaam karein
+                finalUrl += "?text=" + encodeURIComponent(text);
+            }
+
+            // 5. Open WhatsApp
+            window.open(finalUrl, '_blank');
+        }
+    </script>
+
+</body>
+</html>
